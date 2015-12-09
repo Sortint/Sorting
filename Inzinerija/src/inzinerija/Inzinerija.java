@@ -1,6 +1,5 @@
 package inzinerija;
 
-import Algorithms.QuickSortPanel;
 import Descriptions.Algo;
 import Algorithms.*;
 import java.awt.*;
@@ -13,16 +12,20 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
 public class Inzinerija extends JFrame {
 
     private final long serialVersionUID = 1L;
     private SortPanel sortPanel/*, tempPanel*/;
     private JPanel panel;
     //JFrame frame;
-    private  int size = 100;
+    private int size = 20;
     private int[] list = new int[size];
     private int sleepTime = 1;
+    private int width = 640 /*/ 3*/;
+    private int height = 500/* / 3*/;
+    GridBagConstraints grid = new GridBagConstraints();
+   // private FeedbackPanel feedbackPan = new FeedbackPanel();
+
 
     public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(() -> {
@@ -30,51 +33,15 @@ public class Inzinerija extends JFrame {
         });
     }
 
-//    protected void createFrame() {
-//        SwingWorker worker = new SwingWorker<Void, Void>() {
-//
-//            @Override
-//            protected Void doInBackground() throws Exception {
-//                Main frame = new Main();
-//                frame.setVisible(true); //necessary as of 1.3
-//                GridBagConstraints grid = new GridBagConstraints();
-//                grid.fill = GridBagConstraints.FIRST_LINE_START;
-//                grid.gridx = 0;
-//                grid.gridy = 0;
-//                //
-//                panel.add(frame);
-//                try {
-//                    frame.setSelected(true);
-//                } catch (java.beans.PropertyVetoException e) {
-//                }
-//                return null;
-//            }
-//
-//        };
-//        worker.execute();
-//
-//    }
-
     public Inzinerija() {
-        int width = 640 /*/ 3*/;
-        int height = 500/* / 3*/;
 
         setResizable(false);
 
         setLayout(new GridBagLayout());
 
         //JPanel optionsPan = new JPanel();
-        panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-
-        GridBagConstraints grid = new GridBagConstraints();
-
-        // optionsPan.
-        //Algoritmo atvaizdavimas
-        grid.fill = GridBagConstraints.FIRST_LINE_START;
-        grid.gridx = 0;
-        grid.gridy = 0;
-
+        
+        
         for (int i = 0; i < list.length; i++) {
             list[i] = i + 1;
         }
@@ -84,15 +51,22 @@ public class Inzinerija extends JFrame {
             list[i] = list[index];
             list[index] = temp;
         }
+        
+        panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
 
-        sortPanel = new ShellSortPanel(" Fuck Sort ", sleepTime, 640, 500);
-        sortPanel.setPreferredSize(new Dimension(640, 500));
+        //Algoritmo atvaizdavimas
+        grid.fill = GridBagConstraints.HORIZONTAL;
+        grid.gridx = 0;
+        grid.gridy = 1;
+
+        
+
+        sortPanel = new ShellSortPanel(" Shell Sort ", sleepTime, width, height);
+        sortPanel.setPreferredSize(new Dimension(width, height));
         repaint();
-
         sortPanel.setVisible(true);
-
         sortPanel.setList(list);
-
         panel.add(sortPanel, grid);
 
         //Options atvaizdavimas
@@ -104,10 +78,10 @@ public class Inzinerija extends JFrame {
         panel.add(new OptionsPanel(), grid);
 
         //Feedback atvaizdavimas        
-        grid.fill = GridBagConstraints.HORIZONTAL;
-        grid.gridx = 0;
-        grid.gridy = 1;
-        panel.add(new FeedbackPanel(), grid);
+      //  grid.fill = GridBagConstraints.HORIZONTAL;
+      //  grid.gridx = 0;
+      //  grid.gridy = 1;
+       // panel.add(feedbackPan, grid);
 
         //kita
         grid.fill = GridBagConstraints.HORIZONTAL;
@@ -152,7 +126,6 @@ public class Inzinerija extends JFrame {
     class FeedbackPanel extends JPanel {
 
         public FeedbackPanel() {
-            // super();
             setBorder(BorderFactory.createTitledBorder("Algoritmo griztamas rysys"));
             setPreferredSize(new Dimension(640, 100));
             JTextArea text = new JTextArea();
@@ -160,47 +133,12 @@ public class Inzinerija extends JFrame {
             text.setText(content);
             text.setPreferredSize(new Dimension(620, 70));
             add(text);
-            setLocation(0, 500);            
+            setLocation(0, 500);
         }
 
     }
 
-    class OptionsPanel extends JPanel implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            String action = ae.getActionCommand();
-            if ("Run".equals(action)) {
-
-                System.out.println("RUN");
-                SwingWorker worker = new SwingWorker<Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        beginAnimation(list);
-                        return null;
-                    }
-
-                };
-                worker.execute();
-
-                System.out.println("end");
-
-            }
-            if ("Generate".equals(action)) {
-                System.out.println("generate");
-                for (int i = 0; i < list.length; i++) {
-                    list[i] = i + 1;
-                }
-                for (int i = 0; i < list.length; i++) {
-                    int index = (int) (Math.random() * list.length);
-                    int temp = list[i];
-                    list[i] = list[index];
-                    list[index] = temp;
-                }
-                sortPanel.setList(list);
-            }
-        }
+    class OptionsPanel extends JPanel  {
 
         public OptionsPanel() {
             setBorder(BorderFactory.createTitledBorder("Algoritmo nustatymai"));
@@ -225,8 +163,61 @@ public class Inzinerija extends JFrame {
             text.setWrapStyleWord(true);
             text.setPreferredSize(new Dimension(20, 20));
 
-            run.addActionListener(this);
-            reset.addActionListener(this);
+            
+            ActionListener al;
+            al = (ActionEvent ae) -> {
+            String action = ae.getActionCommand();
+            if ("Run".equals(action)) {
+
+                System.out.println("RUN");
+                SwingWorker worker = new SwingWorker<Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        System.out.println("worker start");
+                        generate.setEnabled(false);
+                        reset.setEnabled(false);
+                        run.setEnabled(false);
+                        beginAnimation(list);
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        generate.setEnabled(true);
+                        reset.setEnabled(true);
+                        run.setEnabled(true);
+                        System.out.println("worker done");
+                    }
+
+                };
+                worker.execute();
+
+                System.out.println("end");
+
+            }
+            if ("Generate".equals(action)) {
+                System.out.println("generate");
+                
+                
+                
+                
+                for (int i = 0; i < list.length; i++) {
+                    list[i] = i + 1;
+                }
+                for (int i = 0; i < list.length; i++) {
+                    int index = (int) (Math.random() * list.length);
+                    int temp = list[i];
+                    list[i] = list[index];
+                    list[index] = temp;
+                }
+                sortPanel.setList(list);
+                repaint();
+            }
+        };
+            
+            run.addActionListener(al);
+            generate.addActionListener(al);
 
             ActionListener cbActionListener;
             cbActionListener = (ActionEvent e) -> {
@@ -234,15 +225,103 @@ public class Inzinerija extends JFrame {
 
                 switch (s) {//check for a match
                     case "Bubble sort":
-                        text.setText(A.getBubble().getApras());
+                        
+                        SwingWorker worker = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+                                System.out.println("worker start");
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+                                
+                                text.setText(A.getBubble().getApras());
+                                
+                               panel.remove(sortPanel);
+                               panel.revalidate();
+                               
+                                sortPanel = new BubbleSortPanel(" Bubble Sort ", sleepTime, width, height);
+                                
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+                                                               
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+                                System.out.println("worker done");
+                            }
+
+                        };
+                        worker.execute();
+
                         break;
                     case "Heap sort":
-                        text.setText(A.getHeap().getApras());
+
+                        
+                        SwingWorker worker1 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+                                System.out.println("worker start");
+                                text.setText(A.getHeap().getApras());
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+                                
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+                                panel.repaint();
+
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                               // sortPanel.
+                               // sortPanel.removeAll();
+
+                                sortPanel = new HeapSortPanel(" Heap Sort ", sleepTime, width, height);
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+
+                                panel.add(sortPanel, grid);
+                                panel.revalidate();
+                                        
+                                
+                                
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+                                System.out.println("worker done");
+                            }
+
+                        };
+                        worker1.execute();
+                        
                         break;
                     case "Selection sort":
                         text.setText(A.getSelection().getApras());
                         break;
                     case "Merge sort":
+                        
                         text.setText(A.getMerge().getApras());
                         break;
                     case "Quick sort":
@@ -269,29 +348,20 @@ public class Inzinerija extends JFrame {
             algo.addActionListener(cbActionListener);
 
             //duomenu kiekio slideBar action listeneris. duomenys kinta nuo 0 iki 100
-            ChangeListener a = new ChangeListener() {
-
-                @Override
-                public void stateChanged(ChangeEvent ce) {
-                    JSlider source = (JSlider) ce.getSource();
-                    if (!source.getValueIsAdjusting()) {
-                        int kiekis = (int) source.getValue();
-                        System.out.println("slideA (duomenu kiekio) reiksme: " + kiekis);
-                    }
+            ChangeListener a = (ChangeEvent ce) -> {
+                JSlider source = (JSlider) ce.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    int kiekis = (int) source.getValue();
+                    System.out.println("slideA (duomenu kiekio) reiksme: " + kiekis);
                 }
-
             };
-            ChangeListener s = new ChangeListener() {
-
-                @Override
-                public void stateChanged(ChangeEvent ce) {
-                    JSlider source = (JSlider) ce.getSource();
-                    if (!source.getValueIsAdjusting()) {
-                        int kiekis = (int) source.getValue();
-                        System.out.println("slideS (rikiavimo greicio) reiksme: " + kiekis);
-                    }
+            
+            ChangeListener s = (ChangeEvent ce) -> {
+                JSlider source = (JSlider) ce.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    int kiekis = (int) source.getValue();
+                    System.out.println("slideS (rikiavimo greicio) reiksme: " + kiekis);
                 }
-
             };
 
             slideA.addChangeListener(a);
@@ -330,31 +400,31 @@ public class Inzinerija extends JFrame {
             add(text);
 
             Hashtable labelTable = new Hashtable();
-        labelTable.put(0, new JLabel("0"));
-        labelTable.put(100, new JLabel("300"));
-        slideA.setLabelTable(labelTable);
+            labelTable.put(0, new JLabel("0"));
+            labelTable.put(100, new JLabel("300"));
+            slideA.setLabelTable(labelTable);
 
-        slideA.setPaintLabels(true);
-        add(slideA);
-        add(Box.createRigidArea(new Dimension(0, 30)));
-        add(generate);
-        add(Box.createRigidArea(new Dimension(0, 20)));
-        add(speed);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        Hashtable labelTable1 = new Hashtable();
-        labelTable1.put(0, new JLabel("Slow"));
-        labelTable1.put(100, new JLabel("Fast"));
-        slideS.setLabelTable(labelTable1);
-        slideS.setPaintLabels(true);
-        add(slideS);
-        add(Box.createRigidArea(new Dimension(0, 30)));
-        add(algo);
-        add(Box.createRigidArea(new Dimension(0, 20)));
+            slideA.setPaintLabels(true);
+            add(slideA);
+            add(Box.createRigidArea(new Dimension(0, 30)));
+            add(generate);
+            add(Box.createRigidArea(new Dimension(0, 20)));
+            add(speed);
+            add(Box.createRigidArea(new Dimension(0, 10)));
+            Hashtable labelTable1 = new Hashtable();
+            labelTable1.put(0, new JLabel("Slow"));
+            labelTable1.put(100, new JLabel("Fast"));
+            slideS.setLabelTable(labelTable1);
+            slideS.setPaintLabels(true);
+            add(slideS);
+            add(Box.createRigidArea(new Dimension(0, 30)));
+            add(algo);
+            add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JScrollPane sp = new JScrollPane(text);
-        sp.setPreferredSize(new Dimension(100, 200));
-        add(sp);
-            
+            JScrollPane sp = new JScrollPane(text);
+            sp.setPreferredSize(new Dimension(100, 200));
+            add(sp);
+
         }
     }
 

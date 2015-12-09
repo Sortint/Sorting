@@ -28,6 +28,7 @@ public class CoctailSortPanel extends SortPanel {
 
 	@Override
 	public void run() {
+            System.out.println("Pradėtas Coctail sort");
 		try {
 			boolean swapped = true;
 			int i = 0;

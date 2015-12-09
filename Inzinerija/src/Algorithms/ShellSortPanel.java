@@ -29,6 +29,7 @@ public class ShellSortPanel extends SortPanel {
 	
 	@Override
 	public void run() {
+            System.out.println("Pradėtas Shell");
 		try {
 			
 			int increment = list.length / 2;

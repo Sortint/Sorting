@@ -27,6 +27,7 @@ public class BubbleSortPanel extends SortPanel {
 
 	@Override
 	public void run() {
+            System.out.println("Pradėtas bubble sort");
 		try {
 			boolean needNextPass = true;
 			for (int k = 1; k < list.length && needNextPass; k++) {
