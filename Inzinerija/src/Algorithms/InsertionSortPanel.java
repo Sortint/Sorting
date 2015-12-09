@@ -1,58 +1,50 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Algorithms;
-
-
 
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class SelectionSortPanel extends SortPanel {
+public class InsertionSortPanel extends SortPanel {
 	private static final long serialVersionUID = 1L;
 	private int redColumn = -1;
-	private int blueColumn = -1;
 	private int greenColumn = -1;
 	
-	public SelectionSortPanel(String name, int sleepTime, int width, int height) {
+	public InsertionSortPanel(String name, int sleepTime, int width, int height) {
 		super(name, sleepTime, width, height);
 	}
 
 	@Override
 	public void reset() {
 		redColumn = -1;
-		blueColumn = -1;
 		greenColumn = -1;		
 	}
 
 	@Override
 	public void run() {
 		try {
-			for (int i = 0; i < list.length - 1; i++) {
-				int currentMinIndex = i;
-				redColumn = currentMinIndex;
-				for (int j = i + 1; j < list.length; j++) {
-					blueColumn = j;
+			for (int i = 1; i < list.length; i++) {
+				greenColumn = i;
+				redColumn = greenColumn;
+				int k;
+				for (k = i - 1; k >= 0 && list[k] > list[k + 1]; k--) {
+					Thread.sleep(3 * sleepTime);
+					repaint();
+					redColumn = k + 1;
 					repaint();
 					Thread.sleep(4 * sleepTime);
-					if (list[currentMinIndex] > list[j]) {
-						currentMinIndex = j;
-						redColumn = currentMinIndex;
-						repaint();
-					}
+					int tmp = list[k + 1]; 
+					list[k + 1] = list[k];
+					list[k] = tmp;
 				}
-
-				if (currentMinIndex != i) {
-					int tmp = list[currentMinIndex];
-					list[currentMinIndex] = list[i];
-					list[i] = tmp;
-					repaint();
-					Thread.sleep(4 * sleepTime);
-				}
-				greenColumn++;
+				redColumn = k + 1;
 				repaint();
 			}
-			greenColumn++;
 			redColumn = -1;
-			blueColumn = -1;
 		} catch (InterruptedException e) {
 		}
 		repaint();
@@ -81,13 +73,6 @@ public class SelectionSortPanel extends SortPanel {
 			g.setColor(Color.BLACK);
 			g.drawRect(2 * BORDER_WIDTH + columnWidth * redColumn, getHeight() - list[redColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[redColumn] * columnHeight);
 		}
-		if(blueColumn != -1) {
-			g.setColor(Color.BLUE);
-			g.fillRect(2 * BORDER_WIDTH + columnWidth * blueColumn, getHeight() - list[blueColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[blueColumn] * columnHeight);
-			g.setColor(Color.BLACK);
-			g.drawRect(2 * BORDER_WIDTH + columnWidth * blueColumn, getHeight() - list[blueColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[blueColumn] * columnHeight);
-		}
-
 	}
 
 }

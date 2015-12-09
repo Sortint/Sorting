@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Algorithms;
 
 
@@ -6,13 +11,15 @@ package Algorithms;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class SelectionSortPanel extends SortPanel {
+
+public class QuickSortPanel extends SortPanel {
 	private static final long serialVersionUID = 1L;
 	private int redColumn = -1;
 	private int blueColumn = -1;
+	private int cyanColumn = -1;
 	private int greenColumn = -1;
 	
-	public SelectionSortPanel(String name, int sleepTime, int width, int height) {
+	public QuickSortPanel(String name, int sleepTime, int width, int height) {
 		super(name, sleepTime, width, height);
 	}
 
@@ -20,43 +27,75 @@ public class SelectionSortPanel extends SortPanel {
 	public void reset() {
 		redColumn = -1;
 		blueColumn = -1;
-		greenColumn = -1;		
+		greenColumn = -1;
+		cyanColumn = -1;
 	}
 
 	@Override
 	public void run() {
 		try {
-			for (int i = 0; i < list.length - 1; i++) {
-				int currentMinIndex = i;
-				redColumn = currentMinIndex;
-				for (int j = i + 1; j < list.length; j++) {
-					blueColumn = j;
-					repaint();
-					Thread.sleep(4 * sleepTime);
-					if (list[currentMinIndex] > list[j]) {
-						currentMinIndex = j;
-						redColumn = currentMinIndex;
-						repaint();
-					}
-				}
-
-				if (currentMinIndex != i) {
-					int tmp = list[currentMinIndex];
-					list[currentMinIndex] = list[i];
-					list[i] = tmp;
-					repaint();
-					Thread.sleep(4 * sleepTime);
-				}
-				greenColumn++;
+			quicksort(0, list.length - 1);			
+		} catch (InterruptedException e) {
+		}
+		redColumn = -1;
+		blueColumn = -1;
+		cyanColumn = -1;
+		greenColumn = size - 1;
+		repaint();
+	}
+	
+	private void quicksort(int low, int high) throws InterruptedException {
+		int i = low;
+		int j = high;
+		Thread.sleep(sleepTime);
+		repaint();
+		int pivot = list[low + (high - low) / 2];
+		redColumn = low + (high - low) / 2;
+		
+		while (i <= j) {
+			while (list[i] < pivot) {
+				i++;
+				blueColumn = i;
+				Thread.sleep(4 * sleepTime);
 				repaint();
 			}
-			greenColumn++;
-			redColumn = -1;
+			while (list[j] > pivot) {
+				j--;
+				cyanColumn = j;
+				Thread.sleep(4 * sleepTime);
+				repaint();
+			}
+
+			if (i <= j) {
+				int temp = list[i];
+				list[i] = list[j];
+				list[j] = temp;
+				if(i == redColumn) {
+					redColumn = j;
+				} else if (j == redColumn) {
+					redColumn = i;
+				}
+				Thread.sleep(4 * sleepTime);
+				repaint();
+				i++;
+				j--;
+			}
+		}
+
+		if (low < j) {
+			quicksort(low, j);
+		}
+		if (i < high) {
+			quicksort(i, high);
+		}
+		if(low > greenColumn) {
+			greenColumn = low;
 			blueColumn = -1;
-		} catch (InterruptedException e) {
+			cyanColumn = -1;
 		}
 		repaint();
 	}
+
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -87,6 +126,13 @@ public class SelectionSortPanel extends SortPanel {
 			g.setColor(Color.BLACK);
 			g.drawRect(2 * BORDER_WIDTH + columnWidth * blueColumn, getHeight() - list[blueColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[blueColumn] * columnHeight);
 		}
+		if(cyanColumn != -1) {
+			g.setColor(Color.CYAN);
+			g.fillRect(2 * BORDER_WIDTH + columnWidth * cyanColumn, getHeight() - list[cyanColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[cyanColumn] * columnHeight);
+			g.setColor(Color.BLACK);
+			g.drawRect(2 * BORDER_WIDTH + columnWidth * cyanColumn, getHeight() - list[cyanColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[cyanColumn] * columnHeight);
+		}
+
 
 	}
 

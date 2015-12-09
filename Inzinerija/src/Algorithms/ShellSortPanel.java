@@ -1,18 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Algorithms;
-
 
 
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class SelectionSortPanel extends SortPanel {
+public class ShellSortPanel extends SortPanel {
 	private static final long serialVersionUID = 1L;
 	private int redColumn = -1;
 	private int blueColumn = -1;
 	private int greenColumn = -1;
 	
-	public SelectionSortPanel(String name, int sleepTime, int width, int height) {
+	public ShellSortPanel(String name, int sleepTime, int width, int height) {
 		super(name, sleepTime, width, height);
 	}
 
@@ -22,37 +26,43 @@ public class SelectionSortPanel extends SortPanel {
 		blueColumn = -1;
 		greenColumn = -1;		
 	}
-
+	
 	@Override
 	public void run() {
 		try {
-			for (int i = 0; i < list.length - 1; i++) {
-				int currentMinIndex = i;
-				redColumn = currentMinIndex;
-				for (int j = i + 1; j < list.length; j++) {
-					blueColumn = j;
+			
+			int increment = list.length / 2;
+			while (increment > 0) {
+				for (int i = increment; i < list.length; i++) {
+					redColumn = i;
+					int j = i;
+					int temp = list[i];
 					repaint();
-					Thread.sleep(4 * sleepTime);
-					if (list[currentMinIndex] > list[j]) {
-						currentMinIndex = j;
-						redColumn = currentMinIndex;
+					Thread.sleep(3 * sleepTime);
+					while (j >= increment && list[j - increment] > temp) {
+						blueColumn = j - increment;
+						if(increment == 1) {
+							greenColumn = blueColumn - 1;
+						}
 						repaint();
+						Thread.sleep(4 * sleepTime);
+						list[j] = list[j - increment];
+						j = j - increment;
 					}
-				}
-
-				if (currentMinIndex != i) {
-					int tmp = list[currentMinIndex];
-					list[currentMinIndex] = list[i];
-					list[i] = tmp;
 					repaint();
-					Thread.sleep(4 * sleepTime);
+					Thread.sleep(2 * sleepTime);
+					list[j] = temp;
 				}
-				greenColumn++;
-				repaint();
+				if (increment == 2) {
+					increment = 1;
+				} else {
+					increment *= (5.0 / 11);
+				}
+				
 			}
-			greenColumn++;
 			redColumn = -1;
-			blueColumn = -1;
+			blueColumn = -1;	
+			greenColumn = size - 1;
 		} catch (InterruptedException e) {
 		}
 		repaint();
@@ -87,7 +97,6 @@ public class SelectionSortPanel extends SortPanel {
 			g.setColor(Color.BLACK);
 			g.drawRect(2 * BORDER_WIDTH + columnWidth * blueColumn, getHeight() - list[blueColumn] * columnHeight - 2 * BORDER_WIDTH, columnWidth, list[blueColumn] * columnHeight);
 		}
-
 	}
 
 }

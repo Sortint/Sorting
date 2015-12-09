@@ -1,6 +1,12 @@
 
-package Algorithms;
+package visuals;
 
+
+
+/**
+ *
+ * @author marius940716
+ */
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,11 +19,11 @@ import javax.swing.JPanel;
 public abstract class SortPanel extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	protected static final int BORDER_WIDTH = 10;
-	private final Dimension prefferedDimension;
+	private Dimension prefferedDimension;
 	protected int size;
 	protected int[] list;
 	protected int sleepTime;
-	private final String name;
+	private String name;
 	
 	public SortPanel(String name, int sleepTime, int width, int height) {
 		prefferedDimension = new Dimension(width, height);
@@ -57,11 +63,9 @@ public abstract class SortPanel extends JPanel implements Runnable {
 
 	}
 
-
-        @Override
+	@Override
 	public abstract void run();
 
 	public abstract void reset();
-        
 
 }
