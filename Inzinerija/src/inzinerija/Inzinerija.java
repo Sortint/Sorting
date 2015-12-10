@@ -26,7 +26,6 @@ public class Inzinerija extends JFrame {
     GridBagConstraints grid = new GridBagConstraints();
    // private FeedbackPanel feedbackPan = new FeedbackPanel();
 
-
     public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
@@ -40,8 +39,6 @@ public class Inzinerija extends JFrame {
         setLayout(new GridBagLayout());
 
         //JPanel optionsPan = new JPanel();
-        
-        
         for (int i = 0; i < list.length; i++) {
             list[i] = i + 1;
         }
@@ -51,7 +48,7 @@ public class Inzinerija extends JFrame {
             list[i] = list[index];
             list[index] = temp;
         }
-        
+
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
 
@@ -59,8 +56,6 @@ public class Inzinerija extends JFrame {
         grid.fill = GridBagConstraints.HORIZONTAL;
         grid.gridx = 0;
         grid.gridy = 1;
-
-        
 
         sortPanel = new ShellSortPanel(" Shell Sort ", sleepTime, width, height);
         sortPanel.setPreferredSize(new Dimension(width, height));
@@ -78,11 +73,10 @@ public class Inzinerija extends JFrame {
         panel.add(new OptionsPanel(), grid);
 
         //Feedback atvaizdavimas        
-      //  grid.fill = GridBagConstraints.HORIZONTAL;
-      //  grid.gridx = 0;
-      //  grid.gridy = 1;
-       // panel.add(feedbackPan, grid);
-
+        //  grid.fill = GridBagConstraints.HORIZONTAL;
+        //  grid.gridx = 0;
+        //  grid.gridy = 1;
+        // panel.add(feedbackPan, grid);
         //kita
         grid.fill = GridBagConstraints.HORIZONTAL;
         grid.gridx = 2;
@@ -138,7 +132,7 @@ public class Inzinerija extends JFrame {
 
     }
 
-    class OptionsPanel extends JPanel  {
+    class OptionsPanel extends JPanel {
 
         public OptionsPanel() {
             setBorder(BorderFactory.createTitledBorder("Algoritmo nustatymai"));
@@ -163,59 +157,55 @@ public class Inzinerija extends JFrame {
             text.setWrapStyleWord(true);
             text.setPreferredSize(new Dimension(20, 20));
 
-            
             ActionListener al;
             al = (ActionEvent ae) -> {
-            String action = ae.getActionCommand();
-            if ("Run".equals(action)) {
+                String action = ae.getActionCommand();
+                if ("Run".equals(action)) {
 
-                System.out.println("RUN");
-                SwingWorker worker = new SwingWorker<Void, Void>() {
+                    System.out.println("RUN");
+                    SwingWorker worker = new SwingWorker<Void, Void>() {
 
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        System.out.println("worker start");
-                        generate.setEnabled(false);
-                        reset.setEnabled(false);
-                        run.setEnabled(false);
-                        beginAnimation(list);
-                        return null;
-                    }
+                        @Override
+                        protected Void doInBackground() throws Exception {
 
-                    @Override
-                    protected void done() {
-                        generate.setEnabled(true);
-                        reset.setEnabled(true);
-                        run.setEnabled(true);
-                        System.out.println("worker done");
-                    }
+                            generate.setEnabled(false);
+                            reset.setEnabled(false);
+                            run.setEnabled(false);
+                            beginAnimation(list);
+                            return null;
+                        }
 
-                };
-                worker.execute();
+                        @Override
+                        protected void done() {
+                            generate.setEnabled(true);
+                            reset.setEnabled(true);
+                            run.setEnabled(true);
 
-                System.out.println("end");
+                        }
 
-            }
-            if ("Generate".equals(action)) {
-                System.out.println("generate");
-                
-                
-                
-                
-                for (int i = 0; i < list.length; i++) {
-                    list[i] = i + 1;
+                    };
+                    worker.execute();
+
+                    System.out.println("end");
+
                 }
-                for (int i = 0; i < list.length; i++) {
-                    int index = (int) (Math.random() * list.length);
-                    int temp = list[i];
-                    list[i] = list[index];
-                    list[index] = temp;
+                if ("Generate".equals(action)) {
+                    System.out.println("generate");
+
+                    for (int i = 0; i < list.length; i++) {
+                        list[i] = i + 1;
+                    }
+                    for (int i = 0; i < list.length; i++) {
+                        int index = (int) (Math.random() * list.length);
+                        int temp = list[i];
+                        list[i] = list[index];
+                        list[index] = temp;
+                    }
+                    sortPanel.setList(list);
+                    repaint();
                 }
-                sortPanel.setList(list);
-                repaint();
-            }
-        };
-            
+            };
+
             run.addActionListener(al);
             generate.addActionListener(al);
 
@@ -225,23 +215,23 @@ public class Inzinerija extends JFrame {
 
                 switch (s) {//check for a match
                     case "Bubble sort":
-                        
+
                         SwingWorker worker = new SwingWorker<Void, Void>() {
 
                             @Override
                             protected Void doInBackground() throws Exception {
-                                System.out.println("worker start");
+
                                 generate.setEnabled(false);
                                 reset.setEnabled(false);
                                 run.setEnabled(false);
-                                
+
                                 text.setText(A.getBubble().getApras());
-                                
-                               panel.remove(sortPanel);
-                               panel.revalidate();
-                               
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
                                 sortPanel = new BubbleSortPanel(" Bubble Sort ", sleepTime, width, height);
-                                
+
                                 sortPanel.setPreferredSize(new Dimension(width, height));
                                 sortPanel.setVisible(true);
                                 sortPanel.setList(list);
@@ -249,7 +239,7 @@ public class Inzinerija extends JFrame {
                                 grid.gridx = 0;
                                 grid.gridy = 0;
                                 panel.add(sortPanel, grid);
-                                                               
+
                                 revalidate();
                                 //repaint();
                                 return null;
@@ -260,7 +250,7 @@ public class Inzinerija extends JFrame {
                                 generate.setEnabled(true);
                                 reset.setEnabled(true);
                                 run.setEnabled(true);
-                                System.out.println("worker done");
+
                             }
 
                         };
@@ -269,37 +259,30 @@ public class Inzinerija extends JFrame {
                         break;
                     case "Heap sort":
 
-                        
                         SwingWorker worker1 = new SwingWorker<Void, Void>() {
 
                             @Override
                             protected Void doInBackground() throws Exception {
-                                System.out.println("worker start");
-                                text.setText(A.getHeap().getApras());
+
                                 generate.setEnabled(false);
                                 reset.setEnabled(false);
                                 run.setEnabled(false);
-                                
+
+                                text.setText(A.getHeap().getApras());
+
                                 panel.remove(sortPanel);
                                 panel.revalidate();
-                                panel.repaint();
-
-                                grid.fill = GridBagConstraints.FIRST_LINE_START;
-                                grid.gridx = 0;
-                                grid.gridy = 0;
-                               // sortPanel.
-                               // sortPanel.removeAll();
 
                                 sortPanel = new HeapSortPanel(" Heap Sort ", sleepTime, width, height);
+
                                 sortPanel.setPreferredSize(new Dimension(width, height));
                                 sortPanel.setVisible(true);
                                 sortPanel.setList(list);
-
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
                                 panel.add(sortPanel, grid);
-                                panel.revalidate();
-                                        
-                                
-                                
+
                                 revalidate();
                                 //repaint();
                                 return null;
@@ -310,37 +293,350 @@ public class Inzinerija extends JFrame {
                                 generate.setEnabled(true);
                                 reset.setEnabled(true);
                                 run.setEnabled(true);
-                                System.out.println("worker done");
+
                             }
 
                         };
                         worker1.execute();
-                        
+
                         break;
                     case "Selection sort":
-                        text.setText(A.getSelection().getApras());
+
+                        SwingWorker worker2 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getSelection().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new SelectionSortPanel(" Selection Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker2.execute();
+
                         break;
                     case "Merge sort":
-                        
-                        text.setText(A.getMerge().getApras());
+
+                        SwingWorker worker3 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getMerge().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new MergeSortPanel(" Merge Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker3.execute();
+
                         break;
                     case "Quick sort":
-                        text.setText(A.getQuick().getApras());
+
+                        SwingWorker worker4 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getQuick().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new QuickSortPanel(" Quick Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker4.execute();
                         break;
-                    case "Combo sort":
-                        text.setText(A.getCombo().getApras());
+                    case "Comb sort":
+
+                        SwingWorker worker5 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getCombo().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new CombSortPanel(" Comb Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker5.execute();
                         break;
                     case "Insertion sort":
-                        text.setText(A.getInsertion().getApras());
+
+                        SwingWorker worker6 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getInsertion().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new InsertionSortPanel(" Insertion Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker6.execute();
                         break;
                     case "Shell sort":
-                        text.setText(A.getShell().getApras());
+
+                        SwingWorker worker7 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getShell().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new ShellSortPanel(" Shell Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker7.execute();
                         break;
                     case "Coctail sort":
-                        text.setText(A.getCoctail().getApras());
+
+                        SwingWorker worker8 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getCoctail().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new CoctailSortPanel(" Coctail Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker8.execute();
                         break;
                     default:
-                        text.setText("aaaaaaaaaaaaa");
+
+                        SwingWorker worker9 = new SwingWorker<Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground() throws Exception {
+
+                                generate.setEnabled(false);
+                                reset.setEnabled(false);
+                                run.setEnabled(false);
+
+                                text.setText(A.getSelection().getApras());
+
+                                panel.remove(sortPanel);
+                                panel.revalidate();
+
+                                sortPanel = new SelectionSortPanel(" Selection Sort ", sleepTime, width, height);
+
+                                sortPanel.setPreferredSize(new Dimension(width, height));
+                                sortPanel.setVisible(true);
+                                sortPanel.setList(list);
+                                grid.fill = GridBagConstraints.FIRST_LINE_START;
+                                grid.gridx = 0;
+                                grid.gridy = 0;
+                                panel.add(sortPanel, grid);
+
+                                revalidate();
+                                //repaint();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                generate.setEnabled(true);
+                                reset.setEnabled(true);
+                                run.setEnabled(true);
+
+                            }
+
+                        };
+                        worker9.execute();
                         break;
                 }
             }; //add actionlistner to listen for change
@@ -355,7 +651,7 @@ public class Inzinerija extends JFrame {
                     System.out.println("slideA (duomenu kiekio) reiksme: " + kiekis);
                 }
             };
-            
+
             ChangeListener s = (ChangeEvent ce) -> {
                 JSlider source = (JSlider) ce.getSource();
                 if (!source.getValueIsAdjusting()) {
@@ -420,7 +716,6 @@ public class Inzinerija extends JFrame {
             add(Box.createRigidArea(new Dimension(0, 30)));
             add(algo);
             add(Box.createRigidArea(new Dimension(0, 20)));
-
             JScrollPane sp = new JScrollPane(text);
             sp.setPreferredSize(new Dimension(100, 200));
             add(sp);
