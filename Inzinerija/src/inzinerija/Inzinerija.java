@@ -18,13 +18,14 @@ public class Inzinerija extends JFrame {
     private SortPanel sortPanel/*, tempPanel*/;
     private JPanel panel;
     //JFrame frame;
-    private int size = 20;
+    private int size = 50;
     private int[] list = new int[size];
-    private int sleepTime = 1;
+    private int sleepTime = 50;
     private int width = 640 /*/ 3*/;
     private int height = 500/* / 3*/;
+    private int currentAlgorithm = 0;
     GridBagConstraints grid = new GridBagConstraints();
-   // private FeedbackPanel feedbackPan = new FeedbackPanel();
+    // private FeedbackPanel feedbackPan = new FeedbackPanel();
 
     public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(() -> {
@@ -143,11 +144,11 @@ public class Inzinerija extends JFrame {
             sound.setVisible(false);
             JButton run = new JButton("Run");
             JButton reset = new JButton("Reset");
-            JLabel amount = new JLabel("Amount:");
-            JSlider slideA = new JSlider(JSlider.HORIZONTAL);
+            JLabel amount = new JLabel("Amount: 50");
+            JSlider amountValue = new JSlider(JSlider.HORIZONTAL);
             JButton generate = new JButton("Generate");
-            JLabel speed = new JLabel("Speed:");
-            JSlider slideS = new JSlider(JSlider.HORIZONTAL);
+            JLabel speed = new JLabel("Delay: 50ms");
+            JSlider speedValue = new JSlider(JSlider.HORIZONTAL);
             String[] algorithms = {A.getBubble().getPavad(), A.getHeap().getPavad(), A.getSelection().getPavad(),
                 A.getMerge().getPavad(), A.getQuick().getPavad(),
                 A.getCombo().getPavad(), A.getInsertion().getPavad(), A.getShell().getPavad(), A.getCoctail().getPavad()};
@@ -192,17 +193,85 @@ public class Inzinerija extends JFrame {
                 if ("Generate".equals(action)) {
                     System.out.println("generate");
 
-                    for (int i = 0; i < list.length; i++) {
-                        list[i] = i + 1;
-                    }
-                    for (int i = 0; i < list.length; i++) {
-                        int index = (int) (Math.random() * list.length);
-                        int temp = list[i];
-                        list[i] = list[index];
-                        list[index] = temp;
-                    }
-                    sortPanel.setList(list);
-                    repaint();
+                    SwingWorker worker = new SwingWorker<Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground() throws Exception {
+
+                            generate.setEnabled(false);
+                            reset.setEnabled(false);
+                            run.setEnabled(false);
+                            list = new int[size];
+                            for (int i = 0; i < list.length; i++) {
+                                list[i] = i + 1;
+                            }
+                            for (int i = 0; i < list.length; i++) {
+                                int index = (int) (Math.random() * list.length);
+                                int temp = list[i];
+                                list[i] = list[index];
+                                list[index] = temp;
+                            }
+                            panel.remove(sortPanel);
+                            panel.revalidate();
+                            System.out.println(currentAlgorithm);
+                            switch (currentAlgorithm) {
+                                case 0:
+                                    sortPanel = new BubbleSortPanel(" Bubble Sort ", sleepTime, width, height);
+                                    break;
+                                case 1:
+                                    sortPanel = new HeapSortPanel(" Heap Sort ", sleepTime, width, height);
+                                    break;
+                                case 2:
+                                    sortPanel = new SelectionSortPanel(" Selection Sort ", sleepTime, width, height);
+                                    break;
+                                case 3:
+                                    sortPanel = new MergeSortPanel(" Merge Sort ", sleepTime, width, height);
+                                    break;
+                                case 4:
+                                    sortPanel = new QuickSortPanel(" Quick Sort ", sleepTime, width, height);
+                                    break;
+                                case 5:
+                                    System.out.println("darys COMB");
+                                    sortPanel = new CombSortPanel(" Comb Sort ", sleepTime, width, height);
+                                    break;
+                                case 6:
+                                    sortPanel = new InsertionSortPanel(" Insertion Sort ", sleepTime, width, height);
+                                    break;
+                                case 7:
+                                    sortPanel = new ShellSortPanel(" Shell Sort ", sleepTime, width, height);
+                                    break;
+                                case 8:
+                                    sortPanel = new CoctailSortPanel(" Coctail Sort ", sleepTime, width, height);
+                                    break;
+                                case 9:
+                                    sortPanel = new SelectionSortPanel(" Selection Sort ", sleepTime, width, height);
+                                    break;
+
+                            }
+
+
+                            sortPanel.setPreferredSize(new Dimension(width, height));
+                            sortPanel.setVisible(true);
+                            sortPanel.setList(list);
+                            grid.fill = GridBagConstraints.FIRST_LINE_START;
+                            grid.gridx = 0;
+                            grid.gridy = 0;
+                            panel.add(sortPanel, grid);
+
+                            revalidate();
+                            return null;
+                        }
+
+                        @Override
+                        protected void done() {
+                            generate.setEnabled(true);
+                            reset.setEnabled(true);
+                            run.setEnabled(true);
+
+                        }
+
+                    };
+                    worker.execute();
                 }
             };
 
@@ -215,7 +284,7 @@ public class Inzinerija extends JFrame {
 
                 switch (s) {//check for a match
                     case "Bubble sort":
-
+                        currentAlgorithm = 0;
                         SwingWorker worker = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -258,7 +327,7 @@ public class Inzinerija extends JFrame {
 
                         break;
                     case "Heap sort":
-
+                        currentAlgorithm = 1;
                         SwingWorker worker1 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -301,7 +370,7 @@ public class Inzinerija extends JFrame {
 
                         break;
                     case "Selection sort":
-
+                        currentAlgorithm = 2;
                         SwingWorker worker2 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -344,7 +413,7 @@ public class Inzinerija extends JFrame {
 
                         break;
                     case "Merge sort":
-
+                        currentAlgorithm = 3;
                         SwingWorker worker3 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -387,7 +456,7 @@ public class Inzinerija extends JFrame {
 
                         break;
                     case "Quick sort":
-
+                        currentAlgorithm = 4;
                         SwingWorker worker4 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -428,8 +497,9 @@ public class Inzinerija extends JFrame {
                         };
                         worker4.execute();
                         break;
-                    case "Comb sort":
-
+                    case "Combo sort":
+                        currentAlgorithm = 5;
+                            System.out.println("parinktas COMB");
                         SwingWorker worker5 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -471,7 +541,7 @@ public class Inzinerija extends JFrame {
                         worker5.execute();
                         break;
                     case "Insertion sort":
-
+                        currentAlgorithm = 6;
                         SwingWorker worker6 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -513,7 +583,7 @@ public class Inzinerija extends JFrame {
                         worker6.execute();
                         break;
                     case "Shell sort":
-
+                        currentAlgorithm = 7;
                         SwingWorker worker7 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -555,7 +625,7 @@ public class Inzinerija extends JFrame {
                         worker7.execute();
                         break;
                     case "Coctail sort":
-
+                        currentAlgorithm = 8;
                         SwingWorker worker8 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -597,7 +667,7 @@ public class Inzinerija extends JFrame {
                         worker8.execute();
                         break;
                     default:
-
+                        currentAlgorithm = 9;
                         SwingWorker worker9 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -647,30 +717,33 @@ public class Inzinerija extends JFrame {
             ChangeListener a = (ChangeEvent ce) -> {
                 JSlider source = (JSlider) ce.getSource();
                 if (!source.getValueIsAdjusting()) {
-                    int kiekis = (int) source.getValue();
-                    System.out.println("slideA (duomenu kiekio) reiksme: " + kiekis);
+                    size = 1 + (int) source.getValue();
+                    amount.setText("Amount: "+size);
+                    //System.out.println("amountValue (duomenu kiekio) reiksme: " + size);
                 }
             };
 
             ChangeListener s = (ChangeEvent ce) -> {
                 JSlider source = (JSlider) ce.getSource();
                 if (!source.getValueIsAdjusting()) {
-                    int kiekis = (int) source.getValue();
-                    System.out.println("slideS (rikiavimo greicio) reiksme: " + kiekis);
+                    sleepTime = 1 + (int) source.getValue();
+                    sortPanel.setSleepTime(sleepTime);
+                    speed.setText("Delay: "+sleepTime+"ms");
+                   // System.out.println("Sleepas (rikiavimo greicio) reiksme: " + sleepTime);
                 }
             };
 
-            slideA.addChangeListener(a);
-            slideS.addChangeListener(s);
+            amountValue.addChangeListener(a);
+            speedValue.addChangeListener(s);
 
             sound.setAlignmentX(Component.CENTER_ALIGNMENT);
             run.setAlignmentX(Component.CENTER_ALIGNMENT);
             reset.setAlignmentX(Component.CENTER_ALIGNMENT);
             amount.setAlignmentX(Component.CENTER_ALIGNMENT);
-            slideA.setAlignmentX(Component.CENTER_ALIGNMENT);
+            amountValue.setAlignmentX(Component.CENTER_ALIGNMENT);
             generate.setAlignmentX(Component.CENTER_ALIGNMENT);
             speed.setAlignmentX(Component.CENTER_ALIGNMENT);
-            slideS.setAlignmentX(Component.CENTER_ALIGNMENT);
+            speedValue.setAlignmentX(Component.CENTER_ALIGNMENT);
             algo.setAlignmentX(Component.CENTER_ALIGNMENT);
             text.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -683,44 +756,42 @@ public class Inzinerija extends JFrame {
             add(Box.createRigidArea(new Dimension(0, 20)));
             add(amount);
             add(Box.createRigidArea(new Dimension(0, 10)));
-            add(slideA);
-            add(Box.createRigidArea(new Dimension(0, 30)));
+            add(amountValue);
             add(generate);
-            add(Box.createRigidArea(new Dimension(0, 20)));
             add(speed);
-            add(Box.createRigidArea(new Dimension(0, 10)));
-            add(slideS);
-            add(Box.createRigidArea(new Dimension(0, 30)));
+            add(speedValue);
             add(algo);
             add(Box.createRigidArea(new Dimension(0, 20)));
             add(text);
 
             Hashtable labelTable = new Hashtable();
-            labelTable.put(0, new JLabel("0"));
-            labelTable.put(100, new JLabel("300"));
-            slideA.setLabelTable(labelTable);
+            labelTable.put(0, new JLabel("1"));
+            labelTable.put(100, new JLabel("100"));
+            amountValue.setLabelTable(labelTable);
 
-            slideA.setPaintLabels(true);
-            add(slideA);
+            amountValue.setPaintLabels(true);
+            add(amountValue);
             add(Box.createRigidArea(new Dimension(0, 30)));
             add(generate);
             add(Box.createRigidArea(new Dimension(0, 20)));
             add(speed);
             add(Box.createRigidArea(new Dimension(0, 10)));
             Hashtable labelTable1 = new Hashtable();
-            labelTable1.put(0, new JLabel("Slow"));
-            labelTable1.put(100, new JLabel("Fast"));
-            slideS.setLabelTable(labelTable1);
-            slideS.setPaintLabels(true);
-            add(slideS);
+            labelTable1.put(0, new JLabel("1ms"));
+            labelTable1.put(100, new JLabel("100ms"));
+            speedValue.setLabelTable(labelTable1);
+            speedValue.setPaintLabels(true);
+            add(speedValue);
             add(Box.createRigidArea(new Dimension(0, 30)));
             add(algo);
             add(Box.createRigidArea(new Dimension(0, 20)));
-            JScrollPane sp = new JScrollPane(text);
-            sp.setPreferredSize(new Dimension(100, 200));
-            add(sp);
-
+            
+            JPanel temp = new JPanel();
+            JScrollPane scroll = new JScrollPane(text);
+            scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+            scroll.setPreferredSize(new Dimension(320, 150));
+            temp.add(scroll);
+            add(temp);
         }
     }
-
 }

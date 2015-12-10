@@ -32,6 +32,10 @@ public abstract class SortPanel extends JPanel implements Runnable {
 		this.list = java.util.Arrays.copyOf(list, size);
 		setBackground(Color.BLACK);
 	}
+        
+        public void setSleepTime(int t){
+            this.sleepTime = t;
+        }
 	
 	@Override
 	public Dimension getPreferredSize() {

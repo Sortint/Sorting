@@ -28,6 +28,7 @@ public class CombSortPanel extends SortPanel {
 
 	@Override
 	public void run() {
+            System.out.println("doing comb sort");
 		try {
 			
 		    int gap = list.length;
