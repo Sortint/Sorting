@@ -11,7 +11,7 @@ package Descriptions;
  */
 public class CombDescr {
 
-        String pavad = "Combo sort";
+        String pavad = "Comb sort";
         String apras = "The main idea is to eliminate the small values near the end of the list, as these slow down the sorting process.\n"
                 + "\n"
                 + "How it works:\n"

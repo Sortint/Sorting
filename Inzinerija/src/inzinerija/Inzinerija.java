@@ -144,6 +144,7 @@ public class Inzinerija extends JFrame {
             sound.setVisible(false);
             JButton run = new JButton("Run");
             JButton reset = new JButton("Reset");
+            reset.setVisible(false);
             JLabel amount = new JLabel("Amount: 50");
             JSlider amountValue = new JSlider(JSlider.HORIZONTAL);
             JButton generate = new JButton("Generate");
@@ -156,19 +157,17 @@ public class Inzinerija extends JFrame {
             JTextArea text = new JTextArea();
             text.setLineWrap(true);
             text.setWrapStyleWord(true);
-            text.setPreferredSize(new Dimension(20, 20));
+
 
             ActionListener al;
             al = (ActionEvent ae) -> {
                 String action = ae.getActionCommand();
                 if ("Run".equals(action)) {
-
-                    System.out.println("RUN");
+                 
                     SwingWorker worker = new SwingWorker<Void, Void>() {
 
                         @Override
                         protected Void doInBackground() throws Exception {
-
                             generate.setEnabled(false);
                             reset.setEnabled(false);
                             run.setEnabled(false);
@@ -181,17 +180,12 @@ public class Inzinerija extends JFrame {
                             generate.setEnabled(true);
                             reset.setEnabled(true);
                             run.setEnabled(true);
-
                         }
-
                     };
                     worker.execute();
-
-                    System.out.println("end");
-
+                    
                 }
-                if ("Generate".equals(action)) {
-                    System.out.println("generate");
+                if ("Generate".equals(action)) {                    
 
                     SwingWorker worker = new SwingWorker<Void, Void>() {
 
@@ -248,8 +242,6 @@ public class Inzinerija extends JFrame {
                                     break;
 
                             }
-
-
                             sortPanel.setPreferredSize(new Dimension(width, height));
                             sortPanel.setVisible(true);
                             sortPanel.setList(list);
@@ -497,9 +489,9 @@ public class Inzinerija extends JFrame {
                         };
                         worker4.execute();
                         break;
-                    case "Combo sort":
+                    case "Comb sort":
                         currentAlgorithm = 5;
-                            System.out.println("parinktas COMB");
+
                         SwingWorker worker5 = new SwingWorker<Void, Void>() {
 
                             @Override
@@ -787,8 +779,9 @@ public class Inzinerija extends JFrame {
             add(Box.createRigidArea(new Dimension(0, 20)));
             
             JPanel temp = new JPanel();
-            JScrollPane scroll = new JScrollPane(text);
-            scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+            JScrollPane scroll = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            //scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            
             scroll.setPreferredSize(new Dimension(320, 150));
             temp.add(scroll);
             add(temp);
